@@ -60,16 +60,18 @@ This project combines Computer Vision, Full Stack Development, and Cloud Storage
 
 moody-player/
 │
+
 ├── backend/
 │ ├── src/
 │ ├── server.js
 │ └── .env
+
 │
 ├── frontend/
 │ ├── src/
 │ ├── public/models
 │ └── vite.config.js
-│
+
 └── README.md
 
 ---

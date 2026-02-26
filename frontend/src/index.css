@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  background: #121212;
+  color: white;
+  font-family: sans-serif;
+}
+
+.app-container {
+  padding: 20px;
+}
+
+.camera-section {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.video {
+  width: 320px;
+  border-radius: 12px;
+}
+
+.detect-btn {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.song-card {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.song-card.active {
+  background: #1f1f1f;
+}
+
+.player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #181818;
+  padding: 15px;
+}
+
+.controls {
+  display: flex;
+  gap: 15px;
+  margin: 10px 0;
+}

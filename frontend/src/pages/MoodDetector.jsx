@@ -66,10 +66,10 @@ const MoodDetector = () => {
       setScanStatus('scanning');
       startScanningProcess();
     } catch (err) {
-      console.warn('Camera blocked or unavailable:', err);
+      console.warn('Camera blocked or unavailable. Starting simulated HUD scan...', err);
       setCameraError(true);
-      setScanStatus('idle');
-      // If camera fails, automatically prompt manual selector or simulated scan
+      setScanStatus('scanning');
+      startScanningProcess();
     }
   };
 
@@ -92,7 +92,7 @@ const MoodDetector = () => {
 
   // AI Face Mesh Simulation loop on Canvas
   const drawFaceMesh = () => {
-    if (!canvasRef.current || !videoRef.current || scanStatus !== 'scanning') return;
+    if (!canvasRef.current || scanStatus !== 'scanning') return;
     
     const ctx = canvasRef.current.getContext('2d');
     const width = canvasRef.current.width;
@@ -290,10 +290,9 @@ const MoodDetector = () => {
     setEmotionBreakdown(breakdown);
     setAiSummary(moodDescriptions[mood]);
 
-    // Save mood to db & fetch playlist
+    // Save mood to db
     const token = localStorage.getItem('token');
     try {
-      // 1. Post mood log
       if (token) {
         await axios.post('/api/library/mood-history', { 
           mood, 
@@ -302,12 +301,16 @@ const MoodDetector = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
+    } catch (err) {
+      console.warn('Could not log mood history to server:', err);
+    }
 
-      // 2. Fetch music recommendation from Deezer API Proxy
+    // Fetch music recommendation from Deezer API Proxy
+    try {
       const musicRes = await axios.get(`/api/music/mood/${mood.toLowerCase()}`);
       setRecommendedTracks(musicRes.data);
     } catch (err) {
-      console.error('Error logging mood or fetching music recommendations:', err);
+      console.error('Error fetching mood recommendations:', err);
     }
   };
 

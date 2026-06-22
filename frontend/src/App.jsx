@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   
-  const userName = localStorage.getItem('userName') || 'Ashish';
+  const userName = localStorage.getItem('userName') || 'Sarthak';
   const userAvatar = localStorage.getItem('userAvatar') || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userName}`;
 
   const mobileNavItems = [

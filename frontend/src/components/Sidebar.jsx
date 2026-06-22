@@ -4,7 +4,7 @@ import { Home, Camera, Search, Library, Heart, User, RotateCcw } from 'lucide-re
 import { motion } from 'framer-motion';
 
 const Sidebar = () => {
-  const userName = localStorage.getItem('userName') || 'Ashish';
+  const userName = localStorage.getItem('userName') || 'Sarthak';
   const userAvatar = localStorage.getItem('userAvatar') || `https://api.dicebear.com/7.x/adventurer/svg?seed=${userName}`;
 
   const navItems = [

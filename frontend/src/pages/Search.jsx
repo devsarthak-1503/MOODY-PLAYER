@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Search as SearchIcon, Play, Music, User, Disc, X, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+const API_URL = "https://moody-player-1-snw9.onrender.com";
 import { AudioPlayerContext } from '../context/AudioPlayerContext';
 
 const Search = () => {
@@ -44,7 +45,7 @@ const Search = () => {
   const fetchArtistDetails = async (id) => {
     setArtistLoading(true);
     try {
-      const res = await axios.get(`/api/music/artist/${id}`);
+      const res = await axios.get(`${API_URL}/api/music/artist/${id}`);
       setSelectedArtist(res.data.artist);
       setArtistTracks(res.data.tracks);
     } catch (err) {
@@ -62,7 +63,7 @@ const Search = () => {
 
     setLoading(true);
     try {
-      const res = await axios.get(`/api/music/search?q=${encodeURIComponent(searchQuery)}`);
+      const res = await axios.get(`${API_URL}/api/music/search?q=${encodeURIComponent(searchQuery)}`);
       setResults(res.data);
     } catch (err) {
       console.error(err);
@@ -125,7 +126,7 @@ const Search = () => {
   const getFilteredResults = () => {
     if (activeFilter === 'all') return results;
     if (activeFilter === 'songs') return results.filter(r => r.title);
-    
+
     // Simplistic categorizations for demo UI filters
     if (activeFilter === 'artists') {
       const uniqueArtists = [];
@@ -156,7 +157,7 @@ const Search = () => {
 
   return (
     <div className="pb-32 pt-6 px-4 md:px-8 max-w-7xl mx-auto overflow-hidden">
-      
+
       {/* ARTIST PROFILE OVERLAY DETAIL VIEW */}
       <AnimatePresence>
         {selectedArtist ? (
@@ -335,7 +336,7 @@ const Search = () => {
             {query && (
               <div className="space-y-4">
                 <h3 className="text-base font-bold text-white">Search Results</h3>
-                
+
                 {loading ? (
                   <div className="space-y-3">
                     {[...Array(5)].map((_, i) => (

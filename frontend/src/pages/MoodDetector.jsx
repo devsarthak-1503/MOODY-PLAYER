@@ -4,6 +4,7 @@ import { Camera, RefreshCw, Sparkles, Play, ShieldAlert, Cpu, Heart, CheckCircle
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { AudioPlayerContext } from '../context/AudioPlayerContext';
+const API_URL = "https://moody-player-1-snw9.onrender.com";
 
 const MoodDetector = () => {
   const [searchParams] = useSearchParams();
@@ -14,14 +15,14 @@ const MoodDetector = () => {
   const [cameraError, setCameraError] = useState(false);
   const [scanStatus, setScanStatus] = useState('idle'); // idle | loading | scanning | completed
   const [scanStepText, setScanStepText] = useState('');
-  
+
   // Results
   const [detectedMood, setDetectedMood] = useState('');
   const [confidence, setConfidence] = useState(0);
   const [emotionBreakdown, setEmotionBreakdown] = useState({});
   const [aiSummary, setAiSummary] = useState('');
   const [recommendedTracks, setRecommendedTracks] = useState([]);
-  
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
@@ -55,8 +56,8 @@ const MoodDetector = () => {
     setScanStepText('Requesting webcam access...');
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { width: 640, height: 480, facingMode: 'user' } 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480, facingMode: 'user' }
       });
       setCameraStream(stream);
       if (videoRef.current) {
@@ -93,11 +94,11 @@ const MoodDetector = () => {
   // AI Face Mesh Simulation loop on Canvas
   const drawFaceMesh = () => {
     if (!canvasRef.current || scanStatus !== 'scanning') return;
-    
+
     const ctx = canvasRef.current.getContext('2d');
     const width = canvasRef.current.width;
     const height = canvasRef.current.height;
-    
+
     ctx.clearRect(0, 0, width, height);
 
     // Draw scanning bounding box
@@ -109,7 +110,7 @@ const MoodDetector = () => {
     ctx.lineWidth = 2;
     ctx.shadowBlur = 10;
     ctx.shadowColor = '#00E5FF';
-    
+
     // Bounding Box Corners
     ctx.beginPath();
     // Top-Left
@@ -266,17 +267,17 @@ const MoodDetector = () => {
     stopCamera();
     setScanStatus('completed');
     setScanStepText('Writing results to log...');
-    
+
     const confidenceScore = Math.floor(Math.random() * 20) + 75; // 75-95%
     setDetectedMood(mood);
     setConfidence(confidenceScore);
-    
+
     // Emotion breakdown
     const breakdown = {
       [mood]: confidenceScore
     };
     let remaining = 100 - confidenceScore;
-    
+
     const otherMoods = moodList.filter(m => m !== mood);
     otherMoods.forEach((m, idx) => {
       if (idx === otherMoods.length - 1) {
@@ -294,9 +295,9 @@ const MoodDetector = () => {
     const token = localStorage.getItem('token');
     try {
       if (token) {
-        await axios.post('/api/library/mood-history', { 
-          mood, 
-          confidence: confidenceScore 
+        await axios.post(`${API_URL}/api/library/mood-history`, {
+          mood,
+          confidence: confidenceScore
         }, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -307,7 +308,7 @@ const MoodDetector = () => {
 
     // Fetch music recommendation from Deezer API Proxy
     try {
-      const musicRes = await axios.get(`/api/music/mood/${mood.toLowerCase()}`);
+      const musicRes = await axios.get(`${API_URL}/api/music/mood/${mood.toLowerCase()}`);
       setRecommendedTracks(musicRes.data);
     } catch (err) {
       console.error('Error fetching mood recommendations:', err);
@@ -347,7 +348,7 @@ const MoodDetector = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* CAMERA SCANNING HUB PANEL */}
         <div className="lg:col-span-7 glass-panel p-6 rounded-2xl border border-white/5 relative">
-          
+
           <AnimatePresence mode="wait">
             {scanStatus === 'idle' && (
               <motion.div
@@ -412,7 +413,7 @@ const MoodDetector = () => {
                       playsInline
                     />
                   )}
-                  
+
                   {/* Canvas Landmark Overlay */}
                   <canvas
                     ref={canvasRef}
@@ -458,7 +459,7 @@ const MoodDetector = () => {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-bold text-white">Analysis Complete</h3>
-                
+
                 {/* Large Mood Display */}
                 <div className="my-6 p-6 glass-card rounded-2xl border border-white/5 w-full max-w-sm flex flex-col items-center">
                   <p className="text-[10px] text-textSecondary uppercase tracking-widest font-bold mb-1">Detected Mood State</p>

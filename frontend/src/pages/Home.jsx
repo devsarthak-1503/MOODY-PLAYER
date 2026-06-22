@@ -4,6 +4,7 @@ import { Camera, Flame, History, Award, Sparkles, Play, Plus, Heart } from 'luci
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { AudioPlayerContext } from '../context/AudioPlayerContext';
+const API_URL = "https://moody-player-1-snw9.onrender.com";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -37,18 +38,18 @@ const Home = () => {
       const token = localStorage.getItem('token');
       try {
         // Fetch trending
-        const trendingRes = await axios.get('/api/music/chart');
+        const trendingRes = await axios.get(`${API_URL}/api/music/chart`);
         setTrendingTracks(trendingRes.data.slice(0, 8));
 
         if (token) {
           // Fetch recently played
-          const recentRes = await axios.get('/api/library/recently-played', {
+          const recentRes = await axios.get(`${API_URL}/api/library/recently-played`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setRecentlyPlayed(recentRes.data.slice(0, 6));
 
           // Fetch user playlists
-          const playlistRes = await axios.get('/api/library/playlists', {
+          const playlistRes = await axios.get(`${API_URL}/api/library/playlists`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setUserPlaylists(playlistRes.data);
@@ -74,7 +75,7 @@ const Home = () => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      await axios.post(`/api/library/playlists/${playlistId}/add`, { song }, {
+      await axios.post(`${API_URL}/api/library/playlists/${playlistId}/add`, { song }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Song added to playlist!');

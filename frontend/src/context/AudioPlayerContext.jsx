@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
+const API_URL = "https://moody-player-1-snw9.onrender.com";
+
 export const AudioPlayerContext = createContext();
 
 export const AudioPlayerProvider = ({ children }) => {
@@ -67,7 +69,7 @@ export const AudioPlayerProvider = ({ children }) => {
       if (currentTrack.preview) {
         audio.src = currentTrack.preview;
         audio.load();
-        
+
         if (isPlaying) {
           audio.play()
             .catch(err => {
@@ -75,7 +77,7 @@ export const AudioPlayerProvider = ({ children }) => {
               setIsPlaying(false);
             });
         }
-        
+
         // Record recently played track
         recordRecentlyPlayed(currentTrack);
       } else {
@@ -103,7 +105,7 @@ export const AudioPlayerProvider = ({ children }) => {
     if (!token) return;
 
     try {
-      await axios.post('/api/library/recently-played', { song: track }, {
+      await axios.post(`${API_URL}/api/library/recently-played`, { song: track }, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (err) {
@@ -113,7 +115,7 @@ export const AudioPlayerProvider = ({ children }) => {
 
   const playTrack = (track, queue = []) => {
     if (!track) return;
-    
+
     // Find index in queue
     const index = queue.findIndex(t => t.id === track.id);
     if (index !== -1) {
@@ -131,7 +133,7 @@ export const AudioPlayerProvider = ({ children }) => {
         setCurrentTrackIndex(0);
       }
     }
-    
+
     setCurrentTrack(track);
     setIsPlaying(true);
   };

@@ -2,6 +2,7 @@
 
 Moody Player is a premium, startup-quality, production-ready AI-powered music recommendation platform. Inspired by Spotify Premium and Apple Music, it utilizes real-time client-side face scanning to analyze user emotions and recommend custom playlists directly fetched via a robust backend Deezer proxy.
 
+## 🌐 Live Demo - https://moody-player-ai-pearl.vercel.app/
 ---
 
 ## 🌟 Key Features
